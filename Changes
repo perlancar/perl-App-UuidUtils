@@ -1,3 +1,10 @@
+0.030   2021-01-20  Released-By: PERLANCAR
+
+        - [incompatible change] Rename CLI gen-uuids to gen-uuid.
+
+        - [CLI genuuid] Add options --uuid-version, --backend.
+
+
 0.02    2015-09-27  Released-By: PERLANCAR
 
 	- [ux] Give positional argument for 'num', for convenience.
