@@ -28,7 +28,7 @@ _
         },
         backend => {
             summary => 'Choose a specific backend, if unspecified one will be chosen',
-            schema => ['str*', in=>[qw/Data::UUID UUID::Tiny Crypt::Misc UUID::Random::Secure/]],
+            schema => ['str*', in=>[qw/Data::UUID UUID::Tiny Crypt::Misc UUID::Random::Secure UUID::FFI/]],
             description => <<'_',
 
 Note that not all backends support every version of UUID.
@@ -96,7 +96,7 @@ sub gen_uuid {
                 last if $code_gen;
             }
         }
-        die [412, "Can't use any suitable backend to generate v1 UUID"]
+        die [412, "Can't use any suitable backend to generate v3 UUID"]
             unless $code_gen;
     } elsif ($version =~ /\A(v?5)\z/) {
       CHOOSE_BACKEND: {
@@ -140,7 +140,7 @@ sub gen_uuid {
                 last if $code_gen;
             }
         }
-        die [412, "Can't use any suitable backend to generate v1 UUID"]
+        die [412, "Can't use any suitable backend to generate v4 UUID"]
             unless $code_gen;
     }
 
