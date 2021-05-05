@@ -25,6 +25,12 @@ _
         uuid_version => {
             schema => ['str*', in=>[qw/1 v1 4 v4 random/]],
             default => 'random',
+            cmdline_aliases => {
+                random => {is_flag=>1, summary=>'Shortcut for --uuid-version=random'     , code=>sub{ $_[0]{uuid_version} = 'random'}},
+                R      => {is_flag=>1, summary=>'Shortcut for --uuid-version=random'     , code=>sub{ $_[0]{uuid_version} = 'random'}},
+                v1     => {is_flag=>1, summary=>'Shortcut for --uuid-version=v1'         , code=>sub{ $_[0]{uuid_version} = 'v1'}},
+                v4     => {is_flag=>1, summary=>'Shortcut for --uuid-version=v4 (random)', code=>sub{ $_[0]{uuid_version} = 'v4'}},
+            },
         },
         backend => {
             summary => 'Choose a specific backend, if unspecified one will be chosen',
@@ -77,6 +83,17 @@ sub gen_uuid {
                     };
                 };
                 log_trace "Can't load UUID::Tiny: $@" if $@;
+                last if $code_gen;
+            }
+            if (!$backend || $backend eq 'UUID::FFI') {
+                eval {
+                    require UUID::FFI;
+                    log_trace "Picking UUID::FFI as backend";
+                    $code_gen = sub {
+                        UUID::FFI->new_time->as_hex;
+                    };
+                };
+                log_trace "Can't load UUID::FFI: $@" if $@;
                 last if $code_gen;
             }
         }
@@ -137,6 +154,17 @@ sub gen_uuid {
                     };
                 };
                 log_trace "Can't load UUID::Random::Secure: $@" if $@;
+                last if $code_gen;
+            }
+            if (!$backend || $backend eq 'UUID::FFI') {
+                eval {
+                    require UUID::FFI;
+                    log_trace "Picking UUID::FFI as backend";
+                    $code_gen = sub {
+                        UUID::FFI->new_random->as_hex;
+                    };
+                };
+                log_trace "Can't load UUID::FFI: $@" if $@;
                 last if $code_gen;
             }
         }
